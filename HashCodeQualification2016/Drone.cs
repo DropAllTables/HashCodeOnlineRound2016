@@ -44,11 +44,12 @@ namespace HashCodeQualification2016
                 .Select((order, orderId) => new { order, orderId })
                 .OrderBy(item =>
             {
-                int score = 0;
+                double score = 0;
                 Position pos = nextPosition;
                 foreach (var a in FindBestPath(item.order, description))
                 {
-                    score += DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
+                    score += 0.8 * DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
+                    score += 0.2 * item.order.orderedProducts.Sum(order => order.Value);
                     pos = description.Warehouses[a].position;
                 }
                 score += DistanceCalculator.CalculateDistance(pos, item.order.position);
