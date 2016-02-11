@@ -66,10 +66,11 @@ namespace HashCodeQualification2016
 
             foreach (int idWarehouse in warehouseList)
             {
-                foreach(int idProd in order.orderedProducts.Keys) {
-                    if (order.orderedProducts[idProd] > 0 &&
-                        idProd < description.Warehouses[idWarehouse].heldProducts.Count &&
-                        description.Warehouses[idWarehouse].heldProducts[i] > 0)
+                foreach(int idProd in order.orderedProducts.Keys.ToList()) {
+                    if (order.orderedProducts[idProd] == 0) continue;
+
+                    if (idProd >= description.Warehouses[idWarehouse].heldProducts.Count) continue;
+                    if (description.Warehouses[idWarehouse].heldProducts[idProd] > 0)
                     {
                         int ammountToRetrieve = Math.Min(order.orderedProducts[idProd], description.Warehouses[idWarehouse].heldProducts[idProd]);
 
