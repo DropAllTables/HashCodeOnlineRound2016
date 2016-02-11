@@ -6,11 +6,14 @@ using System.Threading.Tasks;
 
 namespace HashCodeQualification2016
 {
-    class Program
+    class ProblemDescription
     {
-        static void Main(string[] args)
+
+        public static ProblemDescription LoadFromFile(string path)
         {
-            var description = ProblemDescription.LoadFromFile("busy_day.in");
+            var description = new ProblemDescription();
+
+            return description;
         }
     }
 }
