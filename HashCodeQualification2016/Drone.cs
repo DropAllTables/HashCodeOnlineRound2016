@@ -55,10 +55,14 @@ namespace HashCodeQualification2016
                 foreach(int idProd in order.orderedProducts.Keys) {
                     if (order.orderedProducts[idProd] > 0)
                     {
+                        int ammountToRetrieve = Math.Min(order.orderedProducts[idProd], description.Warehouses[idWarehouse].heldProducts[idProd]);
+                        description.Warehouses[idWarehouse].heldProducts[idProd] -= ammountToRetrieve; //remove from available on wh
+                        order.orderedProducts[idProd] -= ammountToRetrieve; //remove from order
+
                         LoadCommand command = new LoadCommand();
                         command.WarehouseId = idWarehouse;
                         command.ProductId = idProd;
-                        command.ProductAmount = Math.Min(0, 1);
+                        command.ProductAmount = ammountToRetrieve;
                         commands.Add(command);
                     }
                 }
