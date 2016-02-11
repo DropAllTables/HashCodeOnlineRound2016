@@ -33,7 +33,7 @@ namespace HashCodeQualification2016
 
                 if (bestOrder != null)
                 {
-                    ExecuteOrder(description, bestOrder.Value);
+                    ExecuteOrder(description, bestOrder.Value, commands);
                 }
             }
         }
@@ -43,12 +43,16 @@ namespace HashCodeQualification2016
             return null;
         }
 
-        public void ExecuteOrder(ProblemDescription description, int i)
+        public void ExecuteOrder(ProblemDescription description, int i, List<Command> commands)
         {
             var order = description.Orders[i];
             description.Orders.RemoveAt(i);
 
-            // TODO
+            // TODO: Find best path
+            // Add commands
+            // Find warehouses
+            // Remove products from warehouse(s)
+            // Set NextPosition/TurnsToNextAction
         }
     }
 }
