@@ -112,16 +112,18 @@ namespace HashCodeQualification2016
 
             Dictionary<int, int> missingItems = new Dictionary<int, int>(order.orderedProducts);
 
+            List<Tuple<Warehouse, int>> warehouses = description.Warehouses
+                .Select((warehouse, warehouseId) => Tuple.Create(warehouse, warehouseId))
+                .ToList();
+
             var activePosition = NextPosition;
             for (;;)
             {
-                foreach (var warehouse in description.Warehouses
-                    .Select((warehouse, warehouseId) => new { warehouse, warehouseId }) // Get warehouses and IDs
-                    .Where(item => !warehouseList.Contains(item.warehouseId)) // That we haven't visited before
-                    .OrderBy(item => DistanceCalculator.CalculateDistance(activePosition, item.warehouse.position)) // Closest ones first
-                    )
+                foreach (var warehouse in warehouses
+                    .OrderBy(item => DistanceCalculator.CalculateSquareDistance(activePosition, item.Item1.position)) // Closest ones first
+                    .ToList())
                 {
-                    var heldProducts = warehouse.warehouse.heldProducts;
+                    var heldProducts = warehouse.Item1.heldProducts;
                     bool anyMatch = false;
 
                     foreach (var itemType in missingItems.Keys.ToList())
@@ -142,8 +144,9 @@ namespace HashCodeQualification2016
 
                     if (anyMatch)
                     {
-                        warehouseList.Add(warehouse.warehouseId);
-                        activePosition = warehouse.warehouse.position;
+                        warehouseList.Add(warehouse.Item2);
+                        warehouses.Remove(warehouse);
+                        activePosition = warehouse.Item1.position;
                         break;
                     }
                 }
