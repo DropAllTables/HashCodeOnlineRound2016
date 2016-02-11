@@ -119,10 +119,22 @@ namespace HashCodeQualification2016
             var activePosition = NextPosition;
             for (;;)
             {
-                foreach (var warehouse in warehouses
-                    .OrderBy(item => DistanceCalculator.CalculateSquareDistance(activePosition, item.Item1.position)) // Closest ones first
-                    .ToList())
+                int maxValue = int.MinValue;
+                int minIndex = -1;
+                for (int i = 0; i < warehouses.Count; ++i)
                 {
+                    var warehouse = warehouses[i];
+                    var distance = DistanceCalculator.CalculateSquareDistance(activePosition, warehouse.Item1.position);
+                    if (distance < maxValue)
+                    {
+                        maxValue = distance;
+                        minIndex = i;
+                    }
+                }
+
+                if (minIndex > 0) {
+                    var warehouse = warehouses[minIndex];
+
                     var heldProducts = warehouse.Item1.heldProducts;
                     bool anyMatch = false;
 
