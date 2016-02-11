@@ -48,11 +48,34 @@ namespace HashCodeQualification2016
             var order = description.Orders[i];
             description.Orders.RemoveAt(i);
 
+            var warehouseList = FindBestPath(order, description);
+
+            foreach (int idWarehouse in warehouseList)
+            {
+                foreach(int idProd in order.orderedProducts.Keys) {
+                    if (order.orderedProducts[idProd] > 0)
+                    {
+                        LoadCommand command = new LoadCommand();
+                        command.WarehouseId = idWarehouse;
+                        command.ProductId = idProd;
+                        command.ProductAmount = Math.Min(0, 1);
+                        commands.Add(command);
+                    }
+                }
+            }
             // TODO: Find best path
             // Add commands
             // Find warehouses
             // Remove products from warehouse(s)
             // Set NextPosition/TurnsToNextAction
+        }
+
+        private List<int> FindBestPath(Order order, ProblemDescription description)
+        {
+            List<int> warehouseList = new List<int>();
+            
+
+            return warehouseList;
         }
     }
 }
