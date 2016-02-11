@@ -42,19 +42,21 @@ namespace HashCodeQualification2016
         {
             var orders = description.Orders
                 .Select((order, orderId) => new { order, orderId })
-                .OrderBy(item =>
-            {
-                int score = 0;
-                Position pos = nextPosition;
-                foreach (var a in FindBestPath(item.order, description))
-                {
-                    score += DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
-                    pos = description.Warehouses[a].position;
-                }
-                score += DistanceCalculator.CalculateDistance(pos, item.order.position);
-                return score;
-            }).ToList();
+                .OrderBy(item => GetScore(item.order, description, nextPosition)).ToList();
             return orders.FirstOrDefault()?.orderId;
+        }
+
+        private int GetScore(Order order, ProblemDescription description, Position nextPosition)
+        {
+            int score = 0;
+            Position pos = nextPosition;
+            foreach (var a in FindBestPath(order, description))
+            {
+                score += DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
+                pos = description.Warehouses[a].position;
+            }
+            score += DistanceCalculator.CalculateDistance(pos, order.position);
+            return score;
         }
 
         public void ExecuteOrder(ProblemDescription description, int i, List<Command> commands)
