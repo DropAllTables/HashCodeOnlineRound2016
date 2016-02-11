@@ -49,7 +49,7 @@ namespace HashCodeQualification2016
                 foreach (var a in FindBestPath(item.order, description))
                 {
                     score += 0.8 * DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
-                    score += 0.2 * item.order.orderedProducts.Sum(order => order.Value);
+                    score += 0.2 * description.Orders.Where(order => order.RealId == item.order.RealId).Sum(order => order.orderedProducts.Sum(orderx => orderx.Value));
                     pos = description.Warehouses[a].position;
                 }
                 score += DistanceCalculator.CalculateDistance(pos, item.order.position);
