@@ -11,13 +11,13 @@ namespace HashCodeQualification2016
         static void Main(string[] args)
         {
             string[] inputs = { "busy_day.in", "mother_of_all_warehouses.in", "redundancy.in" };
-            foreach (var input in inputs)
-            {
+            Parallel.ForEach(inputs, input =>
+           {
 
-                var description = ProblemDescription.LoadFromFile(input);
-                var commands = Solver.Execute(description);
-                SolutionWriter.WriteToFile(commands, input + ".out");
-            }
+               var description = ProblemDescription.LoadFromFile(input);
+               var commands = Solver.Execute(description);
+               SolutionWriter.WriteToFile(commands, input + ".out");
+           });
         }
     }
 }
