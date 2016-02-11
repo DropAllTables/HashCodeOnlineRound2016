@@ -90,7 +90,49 @@ namespace HashCodeQualification2016
         private List<int> FindBestPath(Order order, ProblemDescription description)
         {
             List<int> warehouseList = new List<int>();
-            
+
+            // FIXME: Do this better.
+            // We may be able to find a single warehouse with everything.
+            // So maybe try multiple alternatives
+
+            Dictionary<int, int> missingItems = new Dictionary<int, int>(order.orderedProducts);
+
+            var activePosition = NextPosition;
+            foreach (var warehouse in description.Warehouses
+                .Select((warehouse, warehouseId) => new { warehouse, warehouseId }) // Get warehouses and IDs
+                .Where(item => !warehouseList.Contains(item.warehouseId)) // That we haven't visited before
+                .OrderBy(item => DistanceCalculator.CalculateDistance(activePosition, item.warehouse.position)) // Closest ones first
+                )
+            {
+                var heldProducts = warehouse.warehouse.heldProducts;
+                bool anyMatch = false;
+
+                foreach (var itemType in missingItems.Keys.ToList())
+                {
+                    if (missingItems[itemType] == 0)
+                    {
+                        continue;
+                    }
+
+                    if (itemType < heldProducts.Count && heldProducts[itemType] > 0)
+                    {
+                        var numProducts = Math.Min(heldProducts[itemType], missingItems[itemType]);
+
+                        anyMatch = true;
+                        missingItems[itemType] -= numProducts;
+                    }
+                }
+
+                if (anyMatch)
+                {
+                    warehouseList.Add(warehouse.warehouseId);
+                }
+
+                if (missingItems.All(item => item.Value == 0))
+                {
+                    break;
+                }
+            }
 
             return warehouseList;
         }
