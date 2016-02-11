@@ -100,11 +100,16 @@ namespace HashCodeQualification2016
                         }
                     }
 
-                    description.Orders.Add(order);
+                    BreakAndAddOrder(description, order);
                 }
             }
 
             return description;
+        }
+
+        private static void BreakAndAddOrder(ProblemDescription description, Order order)
+        {
+            description.Orders.Add(order);
         }
     }
 }

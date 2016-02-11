@@ -43,12 +43,16 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Command.cs" />
     <Compile Include="DistanceCalculator.cs" />
+    <Compile Include="Drone.cs" />
     <Compile Include="Order.cs" />
     <Compile Include="Position.cs" />
     <Compile Include="ProblemDescription.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SolutionWriter.cs" />
+    <Compile Include="Solver.cs" />
     <Compile Include="Warehouse.cs" />
   </ItemGroup>
   <ItemGroup>
