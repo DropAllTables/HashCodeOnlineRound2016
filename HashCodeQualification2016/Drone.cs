@@ -67,13 +67,17 @@ namespace HashCodeQualification2016
             foreach (int idWarehouse in warehouseList)
             {
                 foreach(int idProd in order.orderedProducts.Keys) {
-                    if (order.orderedProducts[idProd] > 0)
+                    if (order.orderedProducts[idProd] > 0 &&
+                        idProd < description.Warehouses[idWarehouse].heldProducts.Count &&
+                        description.Warehouses[idWarehouse].heldProducts[i] > 0)
                     {
                         int ammountToRetrieve = Math.Min(order.orderedProducts[idProd], description.Warehouses[idWarehouse].heldProducts[idProd]);
+
                         description.Warehouses[idWarehouse].heldProducts[idProd] -= ammountToRetrieve; //remove from available on wh
                         order.orderedProducts[idProd] -= ammountToRetrieve; //remove from order
 
                         LoadCommand command = new LoadCommand();
+                        command.DroneId = Id;
                         command.WarehouseId = idWarehouse;
                         command.ProductId = idProd;
                         command.ProductAmount = ammountToRetrieve;
@@ -86,6 +90,7 @@ namespace HashCodeQualification2016
             foreach(int idProd in orderProductsAux.Keys)
             {
                 var command = new DeliverCommand();
+                command.DroneId = Id;
                 command.CustomerId = order.RealId;
                 command.ProductId = idProd;
                 command.ProductAmount = orderProductsAux[idProd];
@@ -93,11 +98,6 @@ namespace HashCodeQualification2016
                 TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, description.Orders[order.RealId].position) + 1;
                 NextPosition = description.Orders[order.RealId].position;
             }
-            // TODO: Find best path
-            // Add commands
-            // Find warehouses
-            // Remove products from warehouse(s)
-            // Set NextPosition/TurnsToNextAction
         }
 
         private List<int> FindBestPath(Order order, ProblemDescription description)
@@ -111,34 +111,39 @@ namespace HashCodeQualification2016
             Dictionary<int, int> missingItems = new Dictionary<int, int>(order.orderedProducts);
 
             var activePosition = NextPosition;
-            foreach (var warehouse in description.Warehouses
-                .Select((warehouse, warehouseId) => new { warehouse, warehouseId }) // Get warehouses and IDs
-                .Where(item => !warehouseList.Contains(item.warehouseId)) // That we haven't visited before
-                .OrderBy(item => DistanceCalculator.CalculateDistance(activePosition, item.warehouse.position)) // Closest ones first
-                )
+            for (;;)
             {
-                var heldProducts = warehouse.warehouse.heldProducts;
-                bool anyMatch = false;
-
-                foreach (var itemType in missingItems.Keys.ToList())
+                foreach (var warehouse in description.Warehouses
+                    .Select((warehouse, warehouseId) => new { warehouse, warehouseId }) // Get warehouses and IDs
+                    .Where(item => !warehouseList.Contains(item.warehouseId)) // That we haven't visited before
+                    .OrderBy(item => DistanceCalculator.CalculateDistance(activePosition, item.warehouse.position)) // Closest ones first
+                    )
                 {
-                    if (missingItems[itemType] == 0)
+                    var heldProducts = warehouse.warehouse.heldProducts;
+                    bool anyMatch = false;
+
+                    foreach (var itemType in missingItems.Keys.ToList())
                     {
-                        continue;
+                        if (missingItems[itemType] == 0)
+                        {
+                            continue;
+                        }
+
+                        if (itemType < heldProducts.Count && heldProducts[itemType] > 0)
+                        {
+                            var numProducts = Math.Min(heldProducts[itemType], missingItems[itemType]);
+
+                            anyMatch = true;
+                            missingItems[itemType] -= numProducts;
+                        }
                     }
 
-                    if (itemType < heldProducts.Count && heldProducts[itemType] > 0)
+                    if (anyMatch)
                     {
-                        var numProducts = Math.Min(heldProducts[itemType], missingItems[itemType]);
-
-                        anyMatch = true;
-                        missingItems[itemType] -= numProducts;
+                        warehouseList.Add(warehouse.warehouseId);
+                        activePosition = warehouse.warehouse.position;
+                        break;
                     }
-                }
-
-                if (anyMatch)
-                {
-                    warehouseList.Add(warehouse.warehouseId);
                 }
 
                 if (missingItems.All(item => item.Value == 0))
