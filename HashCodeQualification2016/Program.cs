@@ -10,7 +10,7 @@ namespace HashCodeQualification2016
     {
         static void Main(string[] args)
         {
-            string input = "busy_day.in";
+            string input = "mother_of_all_warehouses.in";
 
             var description = ProblemDescription.LoadFromFile(input);
             var commands = Solver.Execute(description);

@@ -54,7 +54,7 @@ namespace HashCodeQualification2016
                 score += DistanceCalculator.CalculateDistance(pos, item.order.position);
                 return score;
             }).ToList();
-            return orders.FirstOrDefault().orderId;
+            return orders.FirstOrDefault()?.orderId;
         }
 
         public void ExecuteOrder(ProblemDescription description, int i, List<Command> commands)
@@ -91,6 +91,7 @@ namespace HashCodeQualification2016
             }
             foreach(int idProd in orderProductsAux.Keys)
             {
+                if (orderProductsAux[idProd] == 0) continue;
                 var command = new DeliverCommand();
                 command.DroneId = Id;
                 command.CustomerId = order.RealId;
