@@ -49,7 +49,7 @@ namespace HashCodeQualification2016
                     score += DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
                     pos = description.Warehouses[a].position;
                 }
-                score += DistanceCalculator.CalculateDistance(pos, description.Orders[order.RealId].position);
+                score += DistanceCalculator.CalculateDistance(pos, order.position);
                 return score;
             }).ToList();
             var firstOrder = orders.FirstOrDefault();
@@ -96,7 +96,7 @@ namespace HashCodeQualification2016
                 command.ProductId = idProd;
                 command.ProductAmount = orderProductsAux[idProd];
                 commands.Add(command);
-                TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, description.Orders[order.RealId].position) + 1;
+                TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, orders[order.RealId].position) + 1;
                 NextPosition = description.Orders[order.RealId].position;
             }
         }
