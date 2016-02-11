@@ -40,7 +40,20 @@ namespace HashCodeQualification2016
 
         public int? GetBestOrder(ProblemDescription description, Position nextPosition)
         {
-            return null;
+            var orders = description.Orders.OrderBy(order =>
+            {
+                int score = 0;
+                Position pos = nextPosition;
+                foreach (var a in FindBestPath(order, description))
+                {
+                    score += DistanceCalculator.CalculateDistance(pos, description.Warehouses[a].position);
+                    pos = description.Warehouses[a].position;
+                }
+                score += DistanceCalculator.CalculateDistance(pos, description.Orders[order.RealId].position);
+                return score;
+            }).ToList();
+            var firstOrder = orders.FirstOrDefault();
+            return firstOrder?.RealId;
         }
 
         public void ExecuteOrder(ProblemDescription description, int i, List<Command> commands)
