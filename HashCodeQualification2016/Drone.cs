@@ -120,7 +120,7 @@ namespace HashCodeQualification2016
             var activePosition = NextPosition;
             for (;;)
             {
-                int maxValue = int.MinValue;
+                int maxValue = int.MaxValue;
                 int minIndex = -1;
                 for (int i = 0; i < warehouses.Count; ++i)
                 {
@@ -132,39 +132,41 @@ namespace HashCodeQualification2016
                         minIndex = i;
                     }
                 }
+                
+                var tuple = warehouses[minIndex];
 
-                if (minIndex > 0) {
-                    var warehouse = warehouses[minIndex];
+                var heldProducts = tuple.Item1.heldProducts;
+                bool anyMatch = false;
 
-                    var heldProducts = warehouse.Item1.heldProducts;
-                    bool anyMatch = false;
-
-                    foreach (var itemType in missingItems.Keys.ToList())
+                foreach (var itemType in missingItems.Keys.ToList())
+                {
+                    if (missingItems[itemType] == 0)
                     {
-                        if (missingItems[itemType] == 0)
-                        {
-                            continue;
-                        }
-
-                        if (itemType < heldProducts.Count && heldProducts[itemType] > 0)
-                        {
-                            var numProducts = Math.Min(heldProducts[itemType], missingItems[itemType]);
-
-                            anyMatch = true;
-                            missingItems[itemType] -= numProducts;
-                        }
+                        continue;
                     }
 
-                    if (anyMatch)
+                    if (itemType < heldProducts.Count && heldProducts[itemType] > 0)
                     {
-                        warehouseList.Add(warehouse.Item2);
-                        warehouses.Remove(warehouse);
-                        activePosition = warehouse.Item1.position;
-                        break;
+                        var numProducts = Math.Min(heldProducts[itemType], missingItems[itemType]);
+
+                        anyMatch = true;
+                        missingItems[itemType] -= numProducts;
+                        if (missingItems[itemType] == 0)
+                        {
+                            missingItems.Remove(itemType);
+                        }
                     }
                 }
 
-                if (missingItems.All(item => item.Value == 0))
+                if (anyMatch)
+                {
+                    warehouseList.Add(tuple.Item2);
+                    warehouses.Remove(tuple);
+                    activePosition = tuple.Item1.position;
+                    break;
+                }
+
+                if (missingItems.Count == 0)
                 {
                     break;
                 }
