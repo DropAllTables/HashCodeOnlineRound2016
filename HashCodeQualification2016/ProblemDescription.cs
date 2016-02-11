@@ -10,6 +10,7 @@ namespace HashCodeQualification2016
     class ProblemDescription
     {
         public int NumRows, NumCols;
+        public int NumDrones;
         public int Deadline;
         public int MaximumLoad;
         public List<int> ProductWeights;
@@ -43,7 +44,7 @@ namespace HashCodeQualification2016
                 description.NumRows = int.Parse(parameters[0]);
                 description.NumCols = int.Parse(parameters[1]);
 
-                int numDrones = int.Parse(parameters[2]);
+                description.NumDrones = int.Parse(parameters[2]);
                 description.Deadline = int.Parse(parameters[3]);
                 description.MaximumLoad = int.Parse(parameters[4]);
 
