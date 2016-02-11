@@ -10,5 +10,14 @@ namespace HashCodeQualification2016
     {
         public Position position;
         public List<int> heldProducts;
+
+        public Warehouse Copy()
+        {
+            return new Warehouse
+            {
+                position = position,
+                heldProducts = new List<int>(heldProducts)
+            };
+        }
     }
 }

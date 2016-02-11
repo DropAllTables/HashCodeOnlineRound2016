@@ -33,6 +33,11 @@ namespace HashCodeQualification2016
             return Row == position.Row && Column == position.Column;
         }
 
+        public override int GetHashCode()
+        {
+            return (Row << 16) ^ Column;
+        }
+
         public static bool operator ==(Position p1, Position p2)
         {
             return Equals(p1, p2);

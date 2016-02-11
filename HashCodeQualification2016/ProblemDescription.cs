@@ -16,6 +16,20 @@ namespace HashCodeQualification2016
         public List<Warehouse> Warehouses = new List<Warehouse>();
         public List<Order> Orders = new List<Order>();
 
+        public ProblemDescription Copy()
+        {
+            return new ProblemDescription
+            {
+                NumRows = NumRows,
+                NumCols = NumCols,
+                Deadline = Deadline,
+                MaximumLoad = MaximumLoad,
+                ProductWeights = new List<int>(ProductWeights),
+                Warehouses = Warehouses.Select(_ => _.Copy()).ToList(),
+                Orders = Orders.Select(_ => _.Copy()).ToList()
+            };
+        }
+
         public static ProblemDescription LoadFromFile(string path)
         {
             var description = new ProblemDescription();
