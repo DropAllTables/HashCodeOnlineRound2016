@@ -10,7 +10,11 @@ namespace HashCodeQualification2016
     {
         static void Main(string[] args)
         {
-            var description = ProblemDescription.LoadFromFile("busy_day.in");
+            string input = "busy_day.in";
+
+            var description = ProblemDescription.LoadFromFile(input);
+            var commands = Solver.Execute(description);
+            SolutionWriter.WriteToFile(commands, input + ".out");
         }
     }
 }
