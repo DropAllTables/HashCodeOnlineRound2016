@@ -113,16 +113,30 @@ namespace HashCodeQualification2016
 
             Dictionary<int, int> missingItems = new Dictionary<int, int>(order.orderedProducts);
 
+            List<Tuple<Warehouse, int>> warehouses = description.Warehouses
+                .Select((warehouse, warehouseId) => Tuple.Create(warehouse, warehouseId))
+                .ToList();
+
             var activePosition = NextPosition;
             for (;;)
             {
-                foreach (var warehouse in description.Warehouses
-                    .Select((warehouse, warehouseId) => new { warehouse, warehouseId }) // Get warehouses and IDs
-                    .Where(item => !warehouseList.Contains(item.warehouseId)) // That we haven't visited before
-                    .OrderBy(item => DistanceCalculator.CalculateDistance(activePosition, item.warehouse.position)) // Closest ones first
-                    )
+                int maxValue = int.MinValue;
+                int minIndex = -1;
+                for (int i = 0; i < warehouses.Count; ++i)
                 {
-                    var heldProducts = warehouse.warehouse.heldProducts;
+                    var warehouse = warehouses[i];
+                    var distance = DistanceCalculator.CalculateSquareDistance(activePosition, warehouse.Item1.position);
+                    if (distance < maxValue)
+                    {
+                        maxValue = distance;
+                        minIndex = i;
+                    }
+                }
+
+                if (minIndex > 0) {
+                    var warehouse = warehouses[minIndex];
+
+                    var heldProducts = warehouse.Item1.heldProducts;
                     bool anyMatch = false;
 
                     foreach (var itemType in missingItems.Keys.ToList())
@@ -143,8 +157,9 @@ namespace HashCodeQualification2016
 
                     if (anyMatch)
                     {
-                        warehouseList.Add(warehouse.warehouseId);
-                        activePosition = warehouse.warehouse.position;
+                        warehouseList.Add(warehouse.Item2);
+                        warehouses.Remove(warehouse);
+                        activePosition = warehouse.Item1.position;
                         break;
                     }
                 }
