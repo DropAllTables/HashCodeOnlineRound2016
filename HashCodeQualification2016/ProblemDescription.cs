@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace HashCodeQualification2016
 {
-    class ProblemDescription
+    public class ProblemDescription
     {
         public int NumRows, NumCols;
         public int NumDrones;
@@ -109,7 +109,59 @@ namespace HashCodeQualification2016
 
         private static void BreakAndAddOrder(ProblemDescription description, Order order)
         {
+            int maxPayload = description.MaximumLoad;
+
+            while (GetOrderLoad(description, order) > maxPayload)
+            {
+                var newOrder = new Order();
+                newOrder.RealId = order.RealId;
+                newOrder.position = order.position;
+                int newLoad = 0;
+
+                for (;;)
+                {
+                    int heaviestItemSoFar = -1;
+                    int bestWeight = int.MinValue;
+                    foreach (var item in order.orderedProducts)
+                    {
+                        if (item.Value == 0) continue;
+
+                        int weight = description.ProductWeights[item.Key];
+                        if (newLoad + weight < maxPayload && weight > bestWeight)
+                        {
+                            heaviestItemSoFar = item.Key;
+                            bestWeight = weight;
+                        }
+                    }
+
+                    if (heaviestItemSoFar < 0)
+                    {
+                        break;
+                    }
+
+                    int numItems = (maxPayload - newLoad) / bestWeight;
+                    numItems = Math.Min(numItems, order.orderedProducts[heaviestItemSoFar]);
+                    order.orderedProducts[heaviestItemSoFar] -= numItems;
+                    newOrder.orderedProducts[heaviestItemSoFar] = numItems;
+                    newLoad += numItems * bestWeight;
+                }
+
+                description.Orders.Add(newOrder);
+            }
             description.Orders.Add(order);
+        }
+
+        private static int GetOrderLoad(ProblemDescription description, Order order)
+        {
+            int total = 0;
+            foreach (var item in order.orderedProducts)
+            {
+                var type = item.Key;
+                var quantity = item.Value;
+                total += description.ProductWeights[type] * quantity;
+            }
+
+            return total;
         }
     }
 }

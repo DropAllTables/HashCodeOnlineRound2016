@@ -8,15 +8,16 @@ namespace HashCodeQualification2016
 {
     public abstract class Command
     {
-        public abstract string ToString(int droneID);
+        public int DroneId;
+        public abstract string ToString();
     }
 
     public class WaitCommand : Command
     {
         public int Turns = 0;
-        public override string ToString(int droneID) 
+        public override string ToString() 
         {
-            return droneID + " W " + Turns;
+            return DroneId + " W " + Turns;
         }
     }
 
@@ -26,9 +27,9 @@ namespace HashCodeQualification2016
         public int ProductId;
         public int ProductAmount;
 
-        public override string ToString(int droneID)
+        public override string ToString()
         {
-            return droneID + " L " + WarehouseId + " " + ProductId + " " + ProductAmount;
+            return DroneId + " L " + WarehouseId + " " + ProductId + " " + ProductAmount;
         }
     }
 
@@ -38,9 +39,9 @@ namespace HashCodeQualification2016
         public int ProductId;
         public int ProductAmount;
 
-        public override string ToString(int droneID)
+        public override string ToString()
         {
-            return droneID + " U " + WarehouseId + " " + ProductId + " " + ProductAmount;
+            return DroneId + " U " + WarehouseId + " " + ProductId + " " + ProductAmount;
         }
     }
 
@@ -50,9 +51,9 @@ namespace HashCodeQualification2016
         public int ProductId;
         public int ProductAmount;
 
-        public override string ToString(int droneID)
+        public override string ToString()
         {
-            return droneID + " D " + CustomerId + " " + ProductId + " " + ProductAmount;
+            return DroneId + " D " + CustomerId + " " + ProductId + " " + ProductAmount;
         }
     }
 }
