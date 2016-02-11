@@ -47,6 +47,7 @@ namespace HashCodeQualification2016
         {
             var order = description.Orders[i];
             description.Orders.RemoveAt(i);
+            var orderProductsAux = new Dictionary<int,int>(order.orderedProducts);
 
             var warehouseList = FindBestPath(order, description);
 
@@ -63,9 +64,21 @@ namespace HashCodeQualification2016
                         command.WarehouseId = idWarehouse;
                         command.ProductId = idProd;
                         command.ProductAmount = ammountToRetrieve;
-                        commands.Add(command);
+                        commands.Add(command);                   
                     }
+                    TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, description.Warehouses[idWarehouse].position) + 1;
+                    NextPosition = description.Warehouses[idWarehouse].position;
                 }
+            }
+            foreach(int idProd in orderProductsAux.Keys)
+            {
+                var command = new DeliverCommand();
+                command.CustomerId = order.RealId;
+                command.ProductId = idProd;
+                command.ProductAmount = orderProductsAux[idProd];
+                commands.Add(command);
+                TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, description.Orders[order.RealId].position) + 1;
+                NextPosition = description.Orders[order.RealId].position;
             }
             // TODO: Find best path
             // Add commands
