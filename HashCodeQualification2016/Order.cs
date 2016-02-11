@@ -8,6 +8,7 @@ namespace HashCodeQualification2016
 {
     public class Order
     {
+        public int RealId;
         public Position position;
         public Dictionary<int, int> orderedProducts = new Dictionary<int, int>();
 

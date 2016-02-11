@@ -72,12 +72,14 @@ namespace HashCodeQualification2016
                 }
 
                 int numOrders = int.Parse(reader.ReadLine());
+                int orderId = 0;
                 for (int i = 0; i < numOrders; ++i)
                 {
                     var locationLine = reader.ReadLine();
                     var location = locationLine.Split(' ');
 
                     var order = new Order();
+                    order.RealId = orderId++;
                     order.position = new Position(int.Parse(location[0]),
                         int.Parse(location[1]));
 
