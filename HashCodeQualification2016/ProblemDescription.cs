@@ -14,6 +14,7 @@ namespace HashCodeQualification2016
         public int MaximumLoad;
         public List<int> ProductWeights;
         public List<Warehouse> Warehouses = new List<Warehouse>();
+        public List<Order> Orders = new List<Order>();
 
         public static ProblemDescription LoadFromFile(string path)
         {
@@ -54,6 +55,35 @@ namespace HashCodeQualification2016
                         .ToList();
 
                     description.Warehouses.Add(warehouse);
+                }
+
+                int numOrders = int.Parse(reader.ReadLine());
+                for (int i = 0; i < numOrders; ++i)
+                {
+                    var locationLine = reader.ReadLine();
+                    var location = locationLine.Split(' ');
+
+                    var order = new Order();
+                    order.position = new Position(int.Parse(location[0]),
+                        int.Parse(location[1]));
+
+                    int numProductTypes = int.Parse(reader.ReadLine());
+                    var orderInfoLine = reader.ReadLine();
+                    var orderInfoItems = orderInfoLine.Split(' ');
+                    for (int j = 0; j < numProductTypes; ++j)
+                    {
+                        var productType = int.Parse(orderInfoItems[j]);
+
+                        if (order.orderedProducts.ContainsKey(productType))
+                        {
+                            order.orderedProducts[productType]++;
+                        } else
+                        {
+                            order.orderedProducts[productType] = 1;
+                        }
+                    }
+
+                    description.Orders.Add(order);
                 }
             }
 
