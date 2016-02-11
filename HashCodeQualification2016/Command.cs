@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace HashCodeQualification2016
 {
-    abstract class Command
+    public abstract class Command
     {
         public abstract string ToString(int droneID);
     }
 
-    class WaitCommand : Command
+    public class WaitCommand : Command
     {
         public int Turns = 0;
         public override string ToString(int droneID) 
@@ -20,7 +20,7 @@ namespace HashCodeQualification2016
         }
     }
 
-    class LoadCommand : Command
+    public class LoadCommand : Command
     {
         public int WarehouseId;
         public int ProductId;
@@ -32,7 +32,7 @@ namespace HashCodeQualification2016
         }
     }
 
-    class UnloadCommand : Command
+    public class UnloadCommand : Command
     {
         public int WarehouseId;
         public int ProductId;
@@ -44,7 +44,7 @@ namespace HashCodeQualification2016
         }
     }
 
-    class DeliverCommand : Command
+    public class DeliverCommand : Command
     {
         public int CustomerId;
         public int ProductId;
