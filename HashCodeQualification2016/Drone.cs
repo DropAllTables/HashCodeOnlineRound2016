@@ -96,7 +96,7 @@ namespace HashCodeQualification2016
                 command.ProductId = idProd;
                 command.ProductAmount = orderProductsAux[idProd];
                 commands.Add(command);
-                TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, orders[order.RealId].position) + 1;
+                TurnsToNextAction += DistanceCalculator.CalculateDistance(NextPosition, order.position) + 1;
                 NextPosition = description.Orders[order.RealId].position;
             }
         }
